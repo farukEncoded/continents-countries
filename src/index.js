@@ -1,17 +1,46 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import React from "react";
+import ReactDOM from "react-dom";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
+import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
+import CssBaseline from "@mui/material/CssBaseline";
+import App from "./App";
+
+const Client = () => {
+  const [client, setClient] = React.useState();
+
+  React.useEffect(() => {
+    async function init() {
+      const cache = new InMemoryCache();
+      await persistCache({
+        cache,
+        storage: new LocalStorageWrapper(window.localStorage),
+      });
+      setClient(
+        new ApolloClient({
+          uri: "https://countries.trevorblades.com",
+          cache,
+        })
+      );
+    }
+
+    init().catch(console.error);
+  }, []);
+
+  if (!client) {
+    return <h2>Initializing the app...</h2>;
+  }
+
+  return (
+    <ApolloProvider client={client}>
+      <CssBaseline />
+      <App />
+    </ApolloProvider>
+  );
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Client />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );
-
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
