@@ -68,13 +68,19 @@ export default function Country({ countryCode }) {
                 </Typography>
               </div>
               <div>
-                <div style={{ marginBottom: "1rem" }}>
+                <div
+                  style={{
+                    marginBottom: "1rem",
+                    display: "flex",
+                    justifyContent: "space-around",
+                  }}
+                >
                   <Typography color="text.secondary">Emoji-flag</Typography>
-                  {data.country.emoji}
+                  <div>{data.country.emoji}</div>
                 </div>
                 <div>
                   <Typography color="text.secondary">Native Script</Typography>
-                  <Typography h5 gutterBottom>
+                  <Typography variant="h5" gutterBottom>
                     {data.country.native}
                   </Typography>
                 </div>

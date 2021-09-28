@@ -2,7 +2,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 import { persistCache, LocalStorageWrapper } from "apollo3-cache-persist";
-import CssBaseline from "@mui/material/CssBaseline";
 import App from "./App";
 
 const Client = () => {
@@ -32,7 +31,6 @@ const Client = () => {
 
   return (
     <ApolloProvider client={client}>
-      <CssBaseline />
       <App />
     </ApolloProvider>
   );

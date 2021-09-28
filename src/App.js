@@ -10,6 +10,7 @@ import {
   Skeleton,
   Typography,
 } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
 import Queries from "./Queries";
 import Continent from "./Components/Continent";
 import Country from "./Components/Country";
@@ -23,6 +24,8 @@ const createOptionsForDropdown = (elements = []) => {
     }))
     .sort((a, b) => -b.firstLetter.localeCompare(a.firstLetter));
 };
+
+const compareOptionToValue = (option, value) => option.name === value.name;
 
 function App() {
   const {
@@ -55,106 +58,120 @@ function App() {
   };
 
   return (
-    <Box
-      sx={{
-        flexGrow: 1,
-        padding: "1rem",
-        backgroundColor: "InfoBackground",
-        minHeight: "100vh",
-      }}
-    >
-      <Grid container spacing={3} direction="column">
-        <Typography
-          variant="h2"
-          textAlign="center"
-          color="secondary"
-          gutterBottom
-          sx={{ mt: "1rem" }}
-        >
-          Explore continents, countries and languages
-        </Typography>
-        <Button onClick={clearCache}>Clear Cached Data</Button>
-        <Grid container item justifyContent="space-evenly">
-          <Paper>
-            {continentsLoading && (
-              <Skeleton variant="rectangular" width={300} height={50} />
+    <>
+      <CssBaseline />
+      <Box
+        sx={{
+          flexGrow: 1,
+          padding: "1rem",
+          backgroundColor: "InfoBackground",
+          minHeight: "100vh",
+        }}
+      >
+        <Grid container spacing={3} direction="column">
+          <Typography
+            variant="h2"
+            textAlign="center"
+            color="secondary"
+            gutterBottom
+            sx={{ mt: "1rem" }}
+          >
+            Explore continents, countries and languages
+          </Typography>
+          <Button onClick={clearCache}>Clear Cached Data</Button>
+          <Grid container item justifyContent="space-evenly">
+            <Paper>
+              {continentsLoading && (
+                <Skeleton variant="rectangular" width={300} height={50} />
+              )}
+              {continentsError && (
+                <Typography variant="h5" sx={{ color: "red" }}>
+                  Error loading continents data!
+                </Typography>
+              )}
+              {continentsData && (
+                <Autocomplete
+                  options={createOptionsForDropdown(continentsData.continents)}
+                  groupBy={(option) => option.firstLetter}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select A Continent" />
+                  )}
+                  sx={{ width: 300 }}
+                  onChange={onChange}
+                  isOptionEqualToValue={compareOptionToValue}
+                />
+              )}
+            </Paper>
+            <Paper>
+              {countriesLoading && (
+                <Skeleton variant="rectangular" width={300} height={50} />
+              )}
+              {countriesError && (
+                <Typography
+                  variant="h5"
+                  color="secondary"
+                  sx={{ color: "red" }}
+                >
+                  Error loading countries data!
+                </Typography>
+              )}
+              {countriesData && (
+                <Autocomplete
+                  options={createOptionsForDropdown(countriesData.countries)}
+                  groupBy={(option) => option.firstLetter}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select A Country" />
+                  )}
+                  sx={{ width: 300 }}
+                  onChange={onChange}
+                  isOptionEqualToValue={compareOptionToValue}
+                />
+              )}
+            </Paper>
+            <Paper>
+              {langsLoading && (
+                <Skeleton variant="rectangular" width={300} height={50} />
+              )}
+              {langsError && (
+                <Typography
+                  variant="h5"
+                  color="secondary"
+                  sx={{ color: "red" }}
+                >
+                  Error loading languages data!
+                </Typography>
+              )}
+              {langsData && (
+                <Autocomplete
+                  options={createOptionsForDropdown(langsData.languages)}
+                  groupBy={(option) => option.firstLetter}
+                  getOptionLabel={(option) => option.name}
+                  renderInput={(params) => (
+                    <TextField {...params} label="Select A Language" />
+                  )}
+                  sx={{ width: 300 }}
+                  onChange={onChange}
+                  isOptionEqualToValue={compareOptionToValue}
+                />
+              )}
+            </Paper>
+          </Grid>
+          <Grid container item justifyContent="center" alignItems="center">
+            {selectedValue && selectedValue.__typename === "Continent" && (
+              <Continent continent={selectedValue} />
             )}
-            {continentsError && (
-              <Typography variant="h5" sx={{ color: "red" }}>
-                Error loading continents data!
-              </Typography>
+            {selectedValue && selectedValue.__typename === "Country" && (
+              <Country countryCode={selectedValue.code} />
             )}
-            {continentsData && (
-              <Autocomplete
-                options={createOptionsForDropdown(continentsData.continents)}
-                groupBy={(option) => option.firstLetter}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField {...params} label="Select A Continent" />
-                )}
-                sx={{ width: 300 }}
-                onChange={onChange}
-              />
+            {selectedValue && selectedValue.__typename === "Language" && (
+              <Language langCode={selectedValue.code} />
             )}
-          </Paper>
-          <Paper>
-            {countriesLoading && (
-              <Skeleton variant="rectangular" width={300} height={50} />
-            )}
-            {countriesError && (
-              <Typography variant="h5" color="secondary" sx={{ color: "red" }}>
-                Error loading countries data!
-              </Typography>
-            )}
-            {countriesData && (
-              <Autocomplete
-                options={createOptionsForDropdown(countriesData.countries)}
-                groupBy={(option) => option.firstLetter}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField {...params} label="Select A Country" />
-                )}
-                sx={{ width: 300 }}
-                onChange={onChange}
-              />
-            )}
-          </Paper>
-          <Paper>
-            {langsLoading && (
-              <Skeleton variant="rectangular" width={300} height={50} />
-            )}
-            {langsError && (
-              <Typography variant="h5" color="secondary" sx={{ color: "red" }}>
-                Error loading languages data!
-              </Typography>
-            )}
-            {langsData && (
-              <Autocomplete
-                options={createOptionsForDropdown(langsData.languages)}
-                groupBy={(option) => option.firstLetter}
-                getOptionLabel={(option) => option.name}
-                renderInput={(params) => (
-                  <TextField {...params} label="Select A Language" />
-                )}
-                sx={{ width: 300 }}
-                onChange={onChange}
-              />
-            )}
-          </Paper>
+          </Grid>
         </Grid>
-        <Grid container item justifyContent="center" alignItems="center">
-          {selectedValue && selectedValue.__typename === "Continent" && (
-            <Continent continent={selectedValue} />
-          )}
-          {selectedValue && selectedValue.__typename === "Country" && (
-            <Country countryCode={selectedValue.code} />
-          )}
-          {selectedValue && selectedValue.__typename === "Language" && (
-            <Language langCode={selectedValue.code} />
-          )}
-        </Grid>
-      </Grid>
-    </Box>
+      </Box>
+    </>
   );
 }
 
