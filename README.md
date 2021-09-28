@@ -33,6 +33,10 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### There is an issue rendering emoji flag in Windows Google Chrome browser
+
+Check out the details [here](https://stackoverflow.com/questions/54519758/flag-emojis-not-rendering).
+
 <!-- ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
